@@ -9,14 +9,13 @@ const CACHED_URLS = [
 
 // 'install' event called after registering the service worker
 self.addEventListener('install', (event) => {
-  // wait until successfully caching the file before declaring SW installation a success & activating new SW
+  // wait until successfully caching the files before declaring SW installation a success & activating new SW
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(CACHED_URLS))
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  // The match is not verified since it must exist with SW
   event.respondWith(
     fetch(event.request)
       .catch(() => {
