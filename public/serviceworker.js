@@ -7,9 +7,12 @@ const CACHED_URLS = [
   '/img/logo-header.png'
 ];
 
-// 'install' event called after registering the service worker
+// 'install' event called after registering the SW
 self.addEventListener('install', (event) => {
-  // wait until successfully caching the files before declaring SW installation a success & activating new SW
+  /*
+  *   Wait until successfully caching the files before activating new SW.
+  *   Also called 'install dependencies'
+  * */
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(CACHED_URLS))
   );
