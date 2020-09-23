@@ -19,7 +19,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .catch(() => {
-        return caches.match(event.request)
+        // ignoreSearch: ignore query params
+        return caches.match(event.request, { ignoreSearch: true })
           .then((response) => {
             if (response) {
               return response;
