@@ -25,6 +25,7 @@ self.addEventListener('fetch', (event) => {
       const response = await caches.match(event.request, {
         ignoreSearch: true,
       });
+
       if (response) {
         return response;
       } else if (event.request.headers.get('accept').includes('text/html')) {
