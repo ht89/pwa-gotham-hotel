@@ -17,6 +17,7 @@ self.addEventListener('activate', function (event) {
   console.log('activate');
 });
 
+// triggered when SW becomes active & takes control of the app
 self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('bootstrap.min.css')) {
     console.log('Fetch request for: ', event.request.url);
