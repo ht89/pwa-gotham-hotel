@@ -11,6 +11,7 @@ self.addEventListener('install', function (event) {
   console.log('install');
 });
 
+// triggered before SW becomes active & takes control of the app
 self.addEventListener('activate', function (event) {
   console.log('activate');
 });
