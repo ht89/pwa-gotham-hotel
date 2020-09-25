@@ -7,6 +7,7 @@ var CACHED_URLS = [
   '/img/logo-header.png',
 ];
 
+// triggered after SW is registered
 self.addEventListener('install', function (event) {
   console.log('install');
 });
