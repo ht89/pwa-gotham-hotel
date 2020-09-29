@@ -1,4 +1,4 @@
-var CACHE_NAME = 'gih-cache';
+var CACHE_NAME = 'gih-cache-v4';
 var CACHED_URLS = [
   '/index-offline.html',
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
@@ -17,7 +17,17 @@ self.addEventListener('install', function (event) {
 
 // triggered before SW becomes active & takes control of the app
 self.addEventListener('activate', function (event) {
-  console.log('activate');
+  event.waitUntil(
+    caches.keys.then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (CACHE_NAME !== cacheName && cacheName.startsWith('gih-cache')) {
+            caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
 
 // triggered when SW becomes active & takes control of the app
