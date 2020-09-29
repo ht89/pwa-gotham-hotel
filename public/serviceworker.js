@@ -22,26 +22,15 @@ self.addEventListener('activate', function (event) {
 
 // triggered when SW becomes active & takes control of the app
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('bootstrap.min.css')) {
-    console.log('Fetch request for: ', event.request.url);
-
-    event.respondWith(
-      new Response(
-        `
-          .hotel-slogan {
-            background-color: red !important;
-          }
-
-          nav {
-            display: none;
-          }
-        `,
-        {
-          headers: {
-            'Content-Type': 'text/css',
-          },
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request).then((response) => {
+        if (response) {
+          return response;
+        } else if (event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('/index-offline.html');
         }
-      )
-    );
-  }
+      });
+    })
+  );
 });
