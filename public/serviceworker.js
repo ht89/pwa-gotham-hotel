@@ -9,7 +9,10 @@ var CACHED_URLS = [
 
 // triggered after SW is registered
 self.addEventListener('install', function (event) {
-  console.log('install');
+  // check 'The Service Worker Lifetime...' on page 73 for the need for 'waitUntil'
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CACHED_URLS))
+  );
 });
 
 // triggered before SW becomes active & takes control of the app
