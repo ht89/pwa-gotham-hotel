@@ -26,7 +26,7 @@ self.addEventListener('fetch', (event) => {
       new Response(
         `
           .hotel-slogan {
-            background-color: green !important;
+            background-color: red !important;
           }
 
           nav {
