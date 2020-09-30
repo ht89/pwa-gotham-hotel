@@ -18,6 +18,7 @@ self.addEventListener('install', function (event) {
 // triggered before SW becomes active & takes control of the app
 self.addEventListener('activate', function (event) {
   event.waitUntil(
+    // delete old caches
     caches.keys.then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
