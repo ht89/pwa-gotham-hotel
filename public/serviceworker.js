@@ -23,6 +23,7 @@ self.addEventListener('activate', function (event) {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (CACHE_NAME !== cacheName && cacheName.startsWith('gih-cache')) {
+            // implicity return a Promise
             caches.delete(cacheName);
           }
         })
