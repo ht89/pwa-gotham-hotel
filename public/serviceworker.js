@@ -20,7 +20,7 @@ self.addEventListener('install', function (event) {
   // check 'The Service Worker Lifetime...' on page 73 for the need for 'waitUntil'
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // use the existing immutable data in the cache & only cache new data
+      // copy existing data to the new cache & cache new data
       const newImmutableRequests = [];
 
       return Promise.all(
