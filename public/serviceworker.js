@@ -1,3 +1,7 @@
+importScripts(
+  'https://cdnjs.cloudflare.com/ajax/libs/cache.adderall/1.0.0/cache.adderall.js'
+);
+
 const CACHE_NAME = 'gih-cache-v4';
 
 const immutableRequests = [
@@ -7,10 +11,6 @@ const immutableRequests = [
 ];
 
 const mutableRequests = ['/index-offline.html', '/css/gih-offline.css'];
-
-importScripts(
-  'https://cdnjs.cloudflare.com/ajax/libs/cache.adderall/1.0.0/cache.adderall.js'
-);
 
 // triggered after SW is registered
 self.addEventListener('install', function (event) {
