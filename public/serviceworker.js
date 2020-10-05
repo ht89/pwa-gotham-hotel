@@ -1,3 +1,7 @@
+importScripts(
+  'https://cdnjs.cloudflare.com/ajax/libs/cache.adderall/1.0.0/cache.adderall.js'
+);
+
 const CACHE_NAME = 'gih-cache-v4';
 
 const immutableRequests = [
@@ -14,21 +18,24 @@ self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       // copy existing data to the new cache & cache new data
-      const newImmutableRequests = [];
+      // const newImmutableRequests = [];
 
-      return Promise.all(
-        immutableRequests.map((url) => {
-          return caches.match(url).then((response) => {
-            if (response) {
-              return cache.put(url, response);
-            } else {
-              newImmutableRequests.push(url);
+      // return Promise.all(
+      //   immutableRequests.map((url) => {
+      //     return caches.match(url).then((response) => {
+      //       if (response) {
+      //         return cache.put(url, response);
+      //       } else {
+      //         newImmutableRequests.push(url);
 
-              return Promise.resolve();
-            }
-          });
-        })
-      ).then(() => cache.addAll(newImmutableRequests.concat(mutableRequests)));
+      //         return Promise.resolve();
+      //       }
+      //     });
+      //   })
+      // ).then(() => cache.addAll(newImmutableRequests.concat(mutableRequests)));
+
+      // Shorter way
+      return adderall.addAll(cache, immutableRequests, mutableRequests);
     })
   );
 });
