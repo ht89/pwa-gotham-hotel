@@ -1,11 +1,4 @@
 const CACHE_NAME = 'gih-cache-v4';
-const CACHED_URLS = [
-  '/index-offline.html',
-  'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-  '/css/gih-offline.css',
-  '/img/jumbo-background-sm.jpg',
-  '/img/logo-header.png',
-];
 
 const immutableRequests = [
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
