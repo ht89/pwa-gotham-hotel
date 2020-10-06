@@ -61,7 +61,7 @@ self.addEventListener('activate', function (event) {
 // triggered when SW becomes active & takes control of the app
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    // caching strategy: network, then cache
+    // caching strategy: network, fallback to cache
     fetch(event.request).catch(() => {
       return caches.match(event.request).then((response) => {
         if (response) {
