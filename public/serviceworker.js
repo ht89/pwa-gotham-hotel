@@ -32,8 +32,8 @@ self.addEventListener('install', function (event) {
 self.addEventListener('fetch', function (event) {
   const requestURL = new URL(event.request.url);
 
-  // cache, falling back to network w frequent updates
   if (requestURL.pathname === '/' || requestURL.pathname === '/index.html') {
+    // cache, falling back to network w frequent updates
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match('/index.html').then((cachedResponse) => {
@@ -52,6 +52,7 @@ self.addEventListener('fetch', function (event) {
     CACHED_URLS.includes(requestURL.href) ||
     CACHED_URLS.includes(requestURL.pathname)
   ) {
+    // cache, falling back to network
     event.respondWith(
       caches
         .open(CACHE_NAME)
