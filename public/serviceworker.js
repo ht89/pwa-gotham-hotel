@@ -1,4 +1,4 @@
-var CACHE_NAME = 'gih-cache-v4';
+var CACHE_NAME = 'gih-cache-v5';
 var CACHED_URLS = [
   // HTML
   '/index.html',
@@ -9,17 +9,26 @@ var CACHED_URLS = [
   // Javascript
   'https://code.jquery.com/jquery-3.0.0.min.js',
   '/js/app.js',
+  '/js/offline-map.js',
   // Images
   '/img/logo.png',
   '/img/logo-header.png',
   '/img/event-calendar-link.jpg',
   '/img/switch.png',
   '/img/logo-top-background.png',
+  '/img/jumbo-background-sm.jpg',
   '/img/jumbo-background.jpg',
   '/img/reservation-gih.jpg',
   '/img/about-hotel-spa.jpg',
   '/img/about-hotel-luxury.jpg',
+  '/img/event-default.jpg',
+  '/img/map-offline.jpg',
+  // JSON
+  '/events.json',
 ];
+
+var googleMapAPIJS =
+  'https://maps.googleapis.com/maps/api/js?key=AIzaSyDm9jndhfbcWByQnrivoaWAEQA8jy3COdE&callback=initMap';
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
@@ -45,6 +54,42 @@ self.addEventListener('fetch', function (event) {
           });
 
           return cachedResponse || fetchPromise;
+        });
+      })
+    );
+  } else if (requestURL.href === googleMapAPIJS) {
+    event.respondWith(
+      fetch(`${googleMapAPIJS}&${Date.now()}`, {
+        mode: 'no-cors',
+        cache: 'no-store',
+      }).catch(() => caches.match('/js/offline-map.js'))
+    );
+  } else if (requestURL.pathname === '/events.json') {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return fetch(event.request)
+          .then((networkResponse) => {
+            cache.put(event.request, networkResponse.clone());
+
+            return networkResponse;
+          })
+          .catch(() => caches.match(event.request));
+      })
+    );
+  } else if (requestURL.pathname.startsWith('/img/event-')) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          return (
+            cachedResponse ||
+            fetch(event.request)
+              .then((networkResponse) => {
+                cache.put(event.request, networkResponse.clone());
+
+                return networkResponse;
+              })
+              .catch(() => cache.match('/img/event-default.jpg'))
+          );
         });
       })
     );
