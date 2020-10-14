@@ -93,10 +93,13 @@ self.addEventListener('fetch', function (event) {
         });
       })
     );
+  } else if (requestURL.host === 'www.google-analytics.com') {
+    event.respondWith(fetch(event.request));
   } else if (
     CACHED_URLS.includes(requestURL.href) ||
     CACHED_URLS.includes(requestURL.pathname)
   ) {
+    // handle requests for files cached during installation
     // cache, falling back to network
     event.respondWith(
       caches
