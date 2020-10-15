@@ -46,7 +46,7 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match('/index.html').then((cachedResponse) => {
-          // fetch & cache the latest version whether ore not index.html is found
+          // fetch & cache the latest version whether or not index.html is found
           const fetchPromise = fetch('/index.html').then((networkResponse) => {
             cache.put('/index.html', networkResponse.clone());
 
@@ -58,6 +58,7 @@ self.addEventListener('fetch', function (event) {
       })
     );
   } else if (requestURL.href === googleMapAPIJS) {
+    // network, falling back to cache
     event.respondWith(
       fetch(`${googleMapAPIJS}&${Date.now()}`, {
         mode: 'no-cors',
@@ -65,6 +66,7 @@ self.addEventListener('fetch', function (event) {
       }).catch(() => caches.match('/js/offline-map.js'))
     );
   } else if (requestURL.pathname === '/events.json') {
+    // network, falling back to cache with frequent updates
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return fetch(event.request)
@@ -77,6 +79,7 @@ self.addEventListener('fetch', function (event) {
       })
     );
   } else if (requestURL.pathname.startsWith('/img/event-')) {
+    // cache, falling back to network w frequent updates
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((cachedResponse) => {
