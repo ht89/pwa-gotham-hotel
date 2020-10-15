@@ -58,7 +58,7 @@ self.addEventListener('fetch', function (event) {
       })
     );
   } else if (requestURL.href === googleMapAPIJS) {
-    // network, falling back to cache
+    // network, falling back to cache that gives an alternate file
     event.respondWith(
       fetch(`${googleMapAPIJS}&${Date.now()}`, {
         mode: 'no-cors',
