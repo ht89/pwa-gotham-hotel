@@ -59,6 +59,11 @@ self.addEventListener('fetch', function (event) {
     );
   } else if (requestURL.href === googleMapAPIJS) {
     // network, falling back to cache that gives an alternate file
+    /* 
+      a timestamp is added to the request to ensure the request won't be cached by the browser
+      since cache: 'no-store' is not supported by all browsers
+    */
+
     event.respondWith(
       fetch(`${googleMapAPIJS}&${Date.now()}`, {
         mode: 'no-cors',
