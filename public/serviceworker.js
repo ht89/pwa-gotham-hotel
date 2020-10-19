@@ -105,6 +105,7 @@ self.addEventListener('fetch', function (event) {
         });
       })
     );
+    // can be removed unless you want to handle specific exceptions
   } else if (requestURL.host === 'www.google-analytics.com') {
     event.respondWith(fetch(event.request));
   } else if (
