@@ -85,6 +85,10 @@ self.addEventListener('fetch', function (event) {
     );
   } else if (requestURL.pathname.startsWith('/img/event-')) {
     // cache, falling back to network w frequent updates
+    /* 
+      since the images change frequently and not sure which events the clients at the hotel are going to be hosting,
+      they will be cached on demand
+    */
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((cachedResponse) => {
