@@ -114,10 +114,10 @@ self.addEventListener('fetch', function (event) {
 
     // cache, falling back to network
   } else if (requestURL.pathname === '/my-account') {
+    const request = '/my-account.html';
+
     event.respondWith(
-      caches
-        .match(event.request)
-        .then((response) => response || fetch(event.request))
+      caches.match(request).then((response) => response || fetch(request))
     );
 
     // network, falling back to cache w frequent updates
