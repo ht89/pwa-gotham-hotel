@@ -23,18 +23,29 @@
       /******************************************************/
 
       // Open a database
-      const request = window.indexedDB.open('my-database', 1);
+      const request = window.indexedDB.open('my-database', 2);
 
       // Handle error event
       request.onerror = (event) =>
-        console.log(`Database error: ${event.target.error}`);
+        console.log('Database error:', event.target.error);
 
       // Handle success event
       request.onsuccess = (event) => {
         const db = event.target.result;
 
-        console.log(`Database: ${db}`);
-        console.log(`Object store names: ${db.objectStoreNames}`);
+        console.log(`Database:`, db);
+        console.log(`Object store names:`, db.objectStoreNames);
+      };
+
+      // Triggered when the DB version > the current version
+      // DB version must be changed when modifying the DB's structure
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+
+        // passport_number is the unique key for each object in customers store
+        db.createObjectStore('customers', {
+          keyPath: 'passport_number',
+        });
       };
 
       /******************************************************/
