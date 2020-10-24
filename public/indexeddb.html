@@ -50,6 +50,8 @@
           },
         ];
 
+        // before adding data to an object store, must start a new transaction
+        // default value of 2nd argument is 'readonly'
         const customerTransaction = db.transaction('customers', 'readwrite');
 
         customerTransaction.onerror = (event) => {
