@@ -35,6 +35,32 @@
 
         console.log(`Database:`, db);
         console.log(`Object store names:`, db.objectStoreNames);
+
+        // make a transaction
+        const customerData = [
+          {
+            passport_number: '6651',
+            first_name: 'Tal',
+            last_name: 'Ater',
+          },
+          {
+            passport_number: '7727',
+            first_name: 'Archie',
+            last_name: 'Stevens',
+          },
+        ];
+
+        const customerTransaction = db.transaction('customers', 'readwrite');
+
+        customerTransaction.onerror = (event) => {
+          console.log('Error:', event.target.error);
+        };
+
+        const customerStore = customerTransaction.objectStore('customers');
+
+        for (let i = 0; i < customerData.length; i++) {
+          customerStore.add(customerData[i]);
+        }
       };
 
       // Triggered when the DB version > the current version
