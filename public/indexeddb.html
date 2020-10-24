@@ -75,6 +75,19 @@
         };
       };
 
+      // shorter way if not needing to reference objects later
+      request.onsuccess = (event) => {
+        event.target.result
+          .transaction('customers')
+          .objectStore('customers')
+          .get('7727').onsuccess = (event) => {
+          const customer = event.target.result;
+
+          console.log(`First name: ${customer.first_name}`);
+          console.log(`Last name: ${customer.last_name}`);
+        };
+      };
+
       // Triggered when the DB version > the current version
       // DB version must be changed when modifying the DB's structure
       request.onupgradeneeded = (event) => {
