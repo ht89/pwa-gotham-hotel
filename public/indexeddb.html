@@ -50,7 +50,7 @@
           },
         ];
 
-        // before adding data to an object store, must start a new transaction
+        // before taking an action e.g. adding data to an object store, must start a new transaction
         // default value of 2nd argument is 'readonly'
         const customerTransaction = db.transaction('customers', 'readwrite');
 
@@ -60,9 +60,19 @@
 
         const customerStore = customerTransaction.objectStore('customers');
 
-        for (let i = 0; i < customerData.length; i++) {
-          customerStore.add(customerData[i]);
-        }
+        // for (let i = 0; i < customerData.length; i++) {
+        //   customerStore.add(customerData[i]);
+        // }
+
+        // get an object using its key
+        const objectRequest = customerStore.get('7727');
+
+        objectRequest.onsuccess = (event) => {
+          const customer = event.target.result;
+
+          console.log(`First name: ${customer.first_name}`);
+          console.log(`Last name: ${customer.last_name}`);
+        };
       };
 
       // Triggered when the DB version > the current version
