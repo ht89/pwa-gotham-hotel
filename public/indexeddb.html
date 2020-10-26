@@ -73,6 +73,23 @@
         //   console.log(`First name: ${customer.first_name}`);
         //   console.log(`Last name: ${customer.last_name}`);
         // };
+
+        // [Run in console] open a cursor
+        // a cursor: a list of pointers to actual objects in the object store
+        const customerCursor = customerStore.openCursor();
+
+        customerCursor.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (!cursor) {
+            return;
+          }
+
+          console.log(cursor.value.first_name);
+
+          // move to next pointer
+          // trigger cursor onsuccess event
+          cursor.continue();
+        };
       };
 
       // [Run in console] shorter way if not needing to reference objects later
