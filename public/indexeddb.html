@@ -1,45 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IndexedDB Playground</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/gih.css">
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,600,900" rel="stylesheet">
-</head>
-<body class="playground-page">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IndexedDB Playground</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/css/gih.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,600,900"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="playground-page">
+    <script>
+      /******************************************************/
+      /*              Chapter 6. IndexedDB                  */
+      /*        Write your code below this comment          */
+      /******************************************************/
 
-  <script>
-  /******************************************************/
-  /*              Chapter 6. IndexedDB                  */
-  /*        Write your code below this comment          */
-  /******************************************************/
+      // Open a database
+      const request = window.indexedDB.open('my-database', 1);
 
+      // Handle error event
+      request.onerror = (event) =>
+        console.log('Database error:', event.target.error);
 
+      // Handle success event
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-  /******************************************************/
-  </script>
+        console.log(`Database:`, db);
+        console.log(`Object store names:`, db.objectStoreNames);
 
-  <div id="background-image"></div>
-  <header>
-    <div class="hotel-slogan">
-      <h1>IndexedDB Playground</h1>
-    </div>
-  </header>
+        // [Run in console] make a transaction
+        const customerData = [
+          {
+            passport_number: '6651',
+            first_name: 'Tal',
+            last_name: 'Ater',
+          },
+          {
+            passport_number: '7727',
+            first_name: 'Archie',
+            last_name: 'Stevens',
+          },
+        ];
 
-  <div class="container-fluid" id="instructions-container">
-    <div class="row">
-      <div id="instructions-code">
-        <h2>Code that should be added to the page goes inside indexeddb.html</h2>
-        <img src="/img/playground-code.png">
+        // before taking an action e.g. adding data to an object store, must start a new transaction
+        // default value of 2nd argument is 'readonly'
+        const customerTransaction = db.transaction('customers', 'readwrite');
+
+        customerTransaction.onerror = (event) => {
+          console.log('Error:', event.target.error);
+        };
+
+        const customerStore = customerTransaction.objectStore('customers');
+
+        for (let i = 0; i < customerData.length; i++) {
+          customerStore.add(customerData[i]);
+        }
+
+        // get an object using its key (shorter way below)
+        // const objectRequest = customerStore.get('7727');
+
+        // objectRequest.onsuccess = (event) => {
+        //   const customer = event.target.result;
+
+        //   console.log(`First name: ${customer.first_name}`);
+        //   console.log(`Last name: ${customer.last_name}`);
+        // };
+
+        // [Run in console] open a cursor
+        // a cursor: a list of pointers to actual objects in the object store
+        const customerCursor = customerStore.openCursor();
+
+        customerCursor.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (!cursor) {
+            return;
+          }
+
+          console.log(cursor.value.first_name);
+
+          // move to next pointer
+          // trigger cursor onsuccess event
+          cursor.continue();
+        };
+      };
+
+      // [Run in console] shorter way if not needing to reference objects later
+      request.onsuccess = (event) => {
+        event.target.result
+          .transaction('customers')
+          .objectStore('customers')
+          .get('7727').onsuccess = (event) => {
+          const customer = event.target.result;
+
+          console.log(`First name: ${customer.first_name}`);
+          console.log(`Last name: ${customer.last_name}`);
+        };
+      };
+
+      // Triggered when the DB version > the current version
+      // DB version must be changed when modifying the DB's structure
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+
+        // these are migrations that manage different DB versions. More info: page 152
+        if (!db.objectStoreNames.contains('customers')) {
+          db.createObjectStore('customers', {
+            keyPath: 'passport_number',
+          });
+        }
+      };
+
+      /******************************************************/
+    </script>
+
+    <div id="background-image"></div>
+    <header>
+      <div class="hotel-slogan">
+        <h1>IndexedDB Playground</h1>
       </div>
-      <div id="instructions-console">
-        <h2>Console code should be run in the browser’s console.</h2>
-        <img src="/img/playground-console.png">
+    </header>
+
+    <div class="container-fluid" id="instructions-container">
+      <div class="row">
+        <div id="instructions-code">
+          <h2>
+            Code that should be added to the page goes inside indexeddb.html
+          </h2>
+          <img src="/img/playground-code.png" />
+        </div>
+
+        <div id="instructions-console">
+          <h2>Console code should be run in the browser’s console.</h2>
+          <img src="/img/playground-console.png" />
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
