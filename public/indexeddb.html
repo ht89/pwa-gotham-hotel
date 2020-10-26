@@ -23,7 +23,7 @@
       /******************************************************/
 
       // Open a database
-      const request = window.indexedDB.open('my-database', 2);
+      const request = window.indexedDB.open('my-database', 3);
 
       // Handle error event
       request.onerror = (event) =>
@@ -36,7 +36,7 @@
         console.log(`Database:`, db);
         console.log(`Object store names:`, db.objectStoreNames);
 
-        // make a transaction
+        // [Run in console] make a transaction
         const customerData = [
           {
             passport_number: '6651',
@@ -75,7 +75,7 @@
         };
       };
 
-      // shorter way if not needing to reference objects later
+      // [Run in console] shorter way if not needing to reference objects later
       request.onsuccess = (event) => {
         event.target.result
           .transaction('customers')
@@ -93,10 +93,21 @@
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // passport_number is the unique key for each object in customers store
-        db.createObjectStore('customers', {
-          keyPath: 'passport_number',
-        });
+        // these are migrations that manage different DB versions. More info: page 152
+        const oldVersion = event.oldVersion;
+
+        if (oldVersion < 2) {
+          // passport_number is the unique key for each object in customers store
+          db.createObjectStore('customers', {
+            keyPath: 'passport_number',
+          });
+        }
+
+        if (oldVersion < 3) {
+          db.createObjectStore('employees', {
+            keyPath: 'employee_id',
+          });
+        }
       };
 
       /******************************************************/
