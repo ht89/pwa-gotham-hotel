@@ -23,7 +23,7 @@
       /******************************************************/
 
       // Open a database
-      const request = window.indexedDB.open('my-database', 3);
+      const request = window.indexedDB.open('my-database', 1);
 
       // Handle error event
       request.onerror = (event) =>
@@ -60,19 +60,19 @@
 
         const customerStore = customerTransaction.objectStore('customers');
 
-        // for (let i = 0; i < customerData.length; i++) {
-        //   customerStore.add(customerData[i]);
-        // }
+        for (let i = 0; i < customerData.length; i++) {
+          customerStore.add(customerData[i]);
+        }
 
-        // get an object using its key
-        const objectRequest = customerStore.get('7727');
+        // get an object using its key (shorter way below)
+        // const objectRequest = customerStore.get('7727');
 
-        objectRequest.onsuccess = (event) => {
-          const customer = event.target.result;
+        // objectRequest.onsuccess = (event) => {
+        //   const customer = event.target.result;
 
-          console.log(`First name: ${customer.first_name}`);
-          console.log(`Last name: ${customer.last_name}`);
-        };
+        //   console.log(`First name: ${customer.first_name}`);
+        //   console.log(`Last name: ${customer.last_name}`);
+        // };
       };
 
       // [Run in console] shorter way if not needing to reference objects later
@@ -94,18 +94,9 @@
         const db = event.target.result;
 
         // these are migrations that manage different DB versions. More info: page 152
-        const oldVersion = event.oldVersion;
-
-        if (oldVersion < 2) {
-          // passport_number is the unique key for each object in customers store
+        if (!db.objectStoreNames.contains('customers')) {
           db.createObjectStore('customers', {
             keyPath: 'passport_number',
-          });
-        }
-
-        if (oldVersion < 3) {
-          db.createObjectStore('employees', {
-            keyPath: 'employee_id',
           });
         }
       };
