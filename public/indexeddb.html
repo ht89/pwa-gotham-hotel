@@ -139,7 +139,7 @@
 
           exchangeStore.createIndex('to_idx', 'exchange_to', { unique: false });
 
-          // add exchange rates when the transaction is created
+          // add exchange rates only when the object store is created successfully
           exchangeStore.transaction.oncomplete = (event) => {
             exchangeRates = [
               {
