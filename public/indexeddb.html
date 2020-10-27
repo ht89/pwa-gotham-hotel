@@ -60,9 +60,9 @@
 
         const customerStore = customerTransaction.objectStore('customers');
 
-        for (let i = 0; i < customerData.length; i++) {
-          customerStore.add(customerData[i]);
-        }
+        // for (let i = 0; i < customerData.length; i++) {
+        //   customerStore.add(customerData[i]);
+        // }
 
         // get an object using its key (shorter way below)
         // const objectRequest = customerStore.get('7727');
@@ -80,6 +80,8 @@
 
         customerCursor.onsuccess = (event) => {
           const cursor = event.target.result;
+
+          // cursor can be null when passing the last record/ when the object store is empty
           if (!cursor) {
             return;
           }
@@ -93,17 +95,17 @@
       };
 
       // [Run in console] shorter way if not needing to reference objects later
-      request.onsuccess = (event) => {
-        event.target.result
-          .transaction('customers')
-          .objectStore('customers')
-          .get('7727').onsuccess = (event) => {
-          const customer = event.target.result;
+      // request.onsuccess = (event) => {
+      //   event.target.result
+      //     .transaction('customers')
+      //     .objectStore('customers')
+      //     .get('7727').onsuccess = (event) => {
+      //     const customer = event.target.result;
 
-          console.log(`First name: ${customer.first_name}`);
-          console.log(`Last name: ${customer.last_name}`);
-        };
-      };
+      //     console.log(`First name: ${customer.first_name}`);
+      //     console.log(`Last name: ${customer.last_name}`);
+      //   };
+      // };
 
       // Triggered when the DB version > the current version
       // DB version must be changed when modifying the DB's structure
