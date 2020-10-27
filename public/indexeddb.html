@@ -120,6 +120,7 @@
         }
 
         if (!db.objectStoreNames.contains('exchange_rates')) {
+          // autoIncrement creates a unique key for each object
           const exchangeStore = db.createObjectStore('exchange_rates', {
             autoIncrement: true,
           });
@@ -129,9 +130,13 @@
             Indices are used to query an object store & open a cursor that iterates
             over some records that match that query
           */
+
+          // can be used to retrieve all exchange rates from USD to other currencies
+          // 'unique: false' means exchange rates can be duplicate
           exchangeStore.createIndex('from_idx', 'exchange_from', {
             unique: false,
           });
+
           exchangeStore.createIndex('to_idx', 'exchange_to', { unique: false });
 
           // add exchange rates when the transaction is created
