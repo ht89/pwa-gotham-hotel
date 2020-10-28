@@ -92,6 +92,24 @@
           // trigger cursor onsuccess event
           cursor.continue();
         };
+
+        // [Run in console] log all exchange rates from CAD to other currencies
+        const exchangeTransaction = db.transaction('exchange_rates');
+        const exchangeStore = exchangeTransaction.objectStore('exchange_rates');
+        const exchangeIndex = exchangeStore.index('from_idx');
+        const exchangeCursor = exchangeIndex.openCursor('CAD');
+
+        exchangeCursor.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (!cursor) return;
+
+          const rate = cursor.value;
+          console.log(
+            `${rate.exchange_from} to ${rate.exchange_to}: ${rate.rate}`
+          );
+
+          cursor.continue();
+        };
       };
 
       // [Run in console] shorter way if not needing to reference objects later
