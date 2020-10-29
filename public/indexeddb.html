@@ -34,7 +34,6 @@
         const db = event.target.result;
 
         console.log(`Database:`, db);
-        console.log(`Object store names:`, db.objectStoreNames);
 
         // [Run in console] make a transaction
         const customerData = [
@@ -97,6 +96,7 @@
         const exchangeTransaction = db.transaction('exchange_rates');
         const exchangeStore = exchangeTransaction.objectStore('exchange_rates');
         const exchangeIndex = exchangeStore.index('from_idx');
+        // equivalent of openCursor(IDBKeyRange.only('CAD'))
         const exchangeCursor = exchangeIndex.openCursor('CAD');
 
         exchangeCursor.onsuccess = (event) => {
