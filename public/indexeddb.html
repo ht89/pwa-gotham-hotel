@@ -35,7 +35,17 @@
 
         console.log(`Database:`, db);
 
-        // [Run in console] make a transaction
+        // must start a new transaction before taking an action e.g. adding data to an object store,
+        // default value of 2nd argument is 'readonly'
+        const customerTransaction = db.transaction('customers', 'readwrite');
+
+        customerTransaction.onerror = (event) => {
+          console.log('Error:', event.target.error);
+        };
+
+        const customerStore = customerTransaction.objectStore('customers');
+
+        // [Run in console]
         const customerData = [
           {
             passport_number: '6651',
@@ -49,21 +59,11 @@
           },
         ];
 
-        // before taking an action e.g. adding data to an object store, must start a new transaction
-        // default value of 2nd argument is 'readonly'
-        const customerTransaction = db.transaction('customers', 'readwrite');
-
-        customerTransaction.onerror = (event) => {
-          console.log('Error:', event.target.error);
-        };
-
-        const customerStore = customerTransaction.objectStore('customers');
-
         // for (let i = 0; i < customerData.length; i++) {
         //   customerStore.add(customerData[i]);
         // }
 
-        // get an object using its key (shorter way below)
+        // [Run in console] get an object using its key (shorter way below)
         // const objectRequest = customerStore.get('7727');
 
         // objectRequest.onsuccess = (event) => {
