@@ -47,6 +47,7 @@ const getReservations = (successCallback) => {
     objectStore.openCursor().onsuccess = (event) => {
       const cursor = event.target.result;
 
+      // Store, falling back to network w frequent updates
       if (cursor) {
         reservations.push(cursor.value);
         cursor.continue();
