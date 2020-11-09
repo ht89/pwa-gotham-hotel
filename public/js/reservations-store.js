@@ -22,4 +22,55 @@ const openDatabase = () => {
   return request;
 };
 
-const openObjectStore = (storeName, successCallback, transactionMode) => {};
+const openObjectStore = (storeName, successCallback, transactionMode) => {
+  const db = openDatabase();
+
+  if (!db) {
+    return false;
+  }
+
+  db.onsuccess = (event) => {
+    const db = event.target.result;
+
+    const objectStore = db
+      .transaction(storeName, transactionMode)
+      .objectStore(storeName);
+
+    successCallback(objectStore);
+  };
+};
+
+const getReservations = (successCallback) => {
+  const reservations = [];
+
+  const db = openObjectStore('reservations', (objectStore) => {
+    objectStore.openCursor().onsuccess = (event) => {
+      const cursor = event.target.result;
+
+      if (cursor) {
+        reservations.push(cursor.value);
+        cursor.continue();
+      } else if (reservations.length > 0) {
+        successCallback(reservations);
+      } else {
+        $.getJSON('/reservations.json', (reservations) => {
+          openObjectStore(
+            reservations,
+            (reservationStore) => {
+              for (let i = 0; i < reservations.length; i++) {
+                reservationStore.add(reservations[i]);
+              }
+
+              successCallback(reservations);
+            },
+            'readwrite'
+          );
+        });
+      }
+    };
+  });
+
+  if (!db) {
+    $.getJSON('/reservations.json', successCallback);
+  }
+};
