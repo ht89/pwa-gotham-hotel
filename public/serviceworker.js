@@ -28,7 +28,6 @@ var CACHED_URLS = [
   '/img/map-offline.jpg',
   // JSON
   '/events.json',
-  '/reservations.json',
 ];
 var googleMapsAPIJS =
   'https://maps.googleapis.com/maps/api/js?key=' +
