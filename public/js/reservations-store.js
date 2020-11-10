@@ -12,7 +12,7 @@ const openDatabase = () => {
   request.onupgradeneeded = (event) => {
     const db = event.target.result;
 
-    if (!db.objectStores.contains('reservations')) {
+    if (!db.objectStoreNames.contains('reservations')) {
       db.createObjectStore('reservations', {
         keyPath: 'id',
       });
