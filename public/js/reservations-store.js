@@ -56,7 +56,7 @@ const getReservations = (successCallback) => {
       } else {
         $.getJSON('/reservations.json', (reservations) => {
           openObjectStore(
-            reservations,
+            'reservations',
             (reservationStore) => {
               for (let i = 0; i < reservations.length; i++) {
                 reservationStore.add(reservations[i]);
