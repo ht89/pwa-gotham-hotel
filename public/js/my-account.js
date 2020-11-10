@@ -22,7 +22,7 @@ $(document).ready(function () {
 
 // Fetches reservations from server and renders them to the page
 var populateReservations = function () {
-  getReservations(renderReservation);
+  getReservations(renderReservations);
 };
 
 // Go over unconfirmed reservations, and verify their status against the server.
