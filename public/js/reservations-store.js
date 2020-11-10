@@ -1,6 +1,6 @@
 const openDatabase = () => {
   if (!window.indexedDB) {
-    return;
+    return false;
   }
 
   const request = window.indexedDB.open('gih-reservations', 1);
@@ -24,7 +24,6 @@ const openDatabase = () => {
 
 const openObjectStore = (storeName, successCallback, transactionMode) => {
   const db = openDatabase();
-
   if (!db) {
     return false;
   }
@@ -38,6 +37,8 @@ const openObjectStore = (storeName, successCallback, transactionMode) => {
 
     successCallback(objectStore);
   };
+
+  return true;
 };
 
 const getReservations = (successCallback) => {
