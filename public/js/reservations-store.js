@@ -41,6 +41,31 @@ const openObjectStore = (storeName, successCallback, transactionMode) => {
   return true;
 };
 
+const addToObjectStore = (storeName, object) => {
+  openObjectStore(storeName, (store) => {
+    store.add(object);
+  }),
+    'readwrite';
+};
+
+const updateInObjectStore = (storeName, id, object) => {
+  openObjectStore(storeName, (store) => {
+    store.openCursor().onsuccess = (event) => {
+      const cursor = event.target.result;
+      if (!cursor) {
+        return;
+      }
+
+      if (cursor.value.id === id) {
+        cursor.update(object);
+        return;
+      }
+
+      cursor.continue();
+    };
+  });
+};
+
 const getReservations = (successCallback) => {
   const reservations = [];
 
