@@ -32,6 +32,7 @@ var checkUnconfirmedReservations = function () {
       '/reservation-details.json',
       { id: $(this).data('id') },
       function (data) {
+        updateInObjectStore('reservations', data.id, data);
         updateReservationDisplay(data);
       }
     );
@@ -47,6 +48,7 @@ var addReservation = function (id, arrivalDate, nights, guests) {
     guests: guests,
     status: 'Awaiting confirmation',
   };
+  addToObjectStore('reservations', reservationDetails);
   renderReservation(reservationDetails);
   $.getJSON('/make-reservation', reservationDetails, function (data) {
     updateReservationDisplay(data);
