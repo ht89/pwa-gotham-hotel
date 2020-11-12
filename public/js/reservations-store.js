@@ -111,10 +111,6 @@ const getReservations = () => {
         );
       });
   });
-
-  // if (!db) {
-  //   $.getJSON('/reservations.json', successCallback);
-  // }
 };
 
 const getReservationsFromServer = () => {
