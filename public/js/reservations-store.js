@@ -114,11 +114,14 @@ const getReservations = () => {
 };
 
 const getReservationsFromServer = () => {
-  // use feature detection to see which is available since fetch() might be unavailable on older browsers
+  // use feature detection to see which is available since fetch() might not work on older browsers
   return new Promise((resolve) => {
     if (self.$) {
       $.getJSON('/reservations.json', resolve);
     } else if (self.fetch) {
+      fetch('/reservations.json')
+        .then((response) => response.json())
+        .then((reservations) => resolve(reservations));
     }
   });
 };
