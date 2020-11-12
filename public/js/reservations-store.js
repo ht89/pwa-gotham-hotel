@@ -3,11 +3,11 @@ const DB_NAME = 'gih-reservations';
 
 const openDatabase = () => {
   return new Promise((resolve, reject) => {
-    if (!window.indexedDB) {
+    if (!self.indexedDB) {
       reject('IndexedDB not supported');
     }
 
-    const request = window.indexedDB.open(DB_NAME, DB_VERSION);
+    const request = self.indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = (event) => {
       reject('Database error:', event.target.error);
@@ -114,5 +114,11 @@ const getReservations = () => {
 };
 
 const getReservationsFromServer = () => {
-  return new Promise((resolve) => $.getJSON('/reservations.json', resolve));
+  // use feature detection to see which is available since fetch() might be unavailable on older browsers
+  return new Promise((resolve) => {
+    if (self.$) {
+      $.getJSON('/reservations.json', resolve);
+    } else if (self.fetch) {
+    }
+  });
 };
