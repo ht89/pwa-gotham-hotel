@@ -48,8 +48,11 @@ var addReservation = function (id, arrivalDate, nights, guests) {
     guests: guests,
     status: 'Awaiting confirmation',
   };
+
   addToObjectStore('reservations', reservationDetails);
+
   renderReservation(reservationDetails);
+
   $.getJSON('/make-reservation', reservationDetails, function (data) {
     updateReservationDisplay(data);
   });
