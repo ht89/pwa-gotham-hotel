@@ -84,14 +84,23 @@ var updateInObjectStore = function (storeName, id, object) {
   });
 };
 
-var getReservations = function () {
+var getReservations = function (indexName, indexValue) {
   return new Promise(function (resolve) {
     openDatabase()
       .then(function (db) {
-        var objectStore = openObjectStore(db, 'reservations');
-        var reservations = [];
-        objectStore.openCursor().onsuccess = function (event) {
-          var cursor = event.target.result;
+        const objectStore = openObjectStore(db, 'reservations');
+        const reservations = [];
+        var cursor;
+
+        if (indexName && indexValue) {
+          cursor = objectStore.index(indexName).openCursor(indexValue);
+        } else {
+          cursor = objectStore.openCursor();
+        }
+
+        cursor.onsuccess = function (event) {
+          const cursor = event.target.result;
+
           if (cursor) {
             reservations.push(cursor.value);
             cursor.continue();
@@ -106,9 +115,11 @@ var getReservations = function () {
                     'reservations',
                     'readwrite'
                   );
+
                   for (var i = 0; i < reservations.length; i++) {
                     objectStore.add(reservations[i]);
                   }
+
                   resolve(reservations);
                 });
               });
