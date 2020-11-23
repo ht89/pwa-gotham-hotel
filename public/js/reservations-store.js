@@ -15,19 +15,22 @@ var openDatabase = function () {
 
     request.onupgradeneeded = function (event) {
       var db = event.target.result;
+      const upgradeTransaction = event.target.transaction;
+      var reservationStore;
 
       if (!db.objectStoreNames.contains('reservations')) {
-        db.createObjectStore('reservations', { keyPath: 'id' });
+        reservationStore = db.createObjectStore('reservations', {
+          keyPath: 'id',
+        });
       } else {
-        const upgradeTransaction = event.target.transaction;
-        const reservationStore = upgradeTransaction.objectStore('reservations');
+        reservationStore = upgradeTransaction.objectStore('reservations');
+      }
 
-        // create index on status field
-        if (!reservationStore.indexNames.contains('idx_status')) {
-          reservationStore.createIndex('idx_status', 'status', {
-            unique: false,
-          });
-        }
+      // create index on status field
+      if (!reservationStore.indexNames.contains('idx_status')) {
+        reservationStore.createIndex('idx_status', 'status', {
+          unique: false,
+        });
       }
     };
 
