@@ -173,7 +173,15 @@ const syncReservations = () => {
       reservations.map((reservation) => {
         const reservationUrl = createReservationUrl(reservation);
 
-        return fetch(reservationUrl);
+        return fetch(reservationUrl)
+          .then((response) => response.json())
+          .then((newReservation) => {
+            return updateInObjectStore(
+              'reservations',
+              newReservation.id,
+              newReservation
+            );
+          });
       })
     )
   );
