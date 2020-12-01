@@ -1,4 +1,4 @@
-importScripts(['/js/reservations-store.js']);
+importScripts('/js/reservations-store.js');
 
 var CACHE_NAME = 'gih-cache-v5';
 var CACHED_URLS = [
@@ -126,7 +126,7 @@ self.addEventListener('fetch', function (event) {
     );
     // Handle analytics requests
   } else if (requestURL.host === 'www.google-analytics.com') {
-    event.respondWith(fetch(event.request));
+    // event.respondWith(fetch(event.request));
     // Handle requests for files cached during installation
   } else if (
     CACHED_URLS.includes(requestURL.href) ||
