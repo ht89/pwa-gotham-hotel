@@ -53,7 +53,7 @@ var addReservation = function (id, arrivalDate, nights, guests) {
 
   renderReservation(reservationDetails);
 
-  if ('servicewoker' in navigator && 'SyncManager' in window) {
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
     navigator.serviceWorker.ready.then((registration) =>
       registration.sync.register('sync-reservations')
     );
