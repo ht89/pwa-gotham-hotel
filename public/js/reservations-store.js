@@ -68,13 +68,16 @@ var updateInObjectStore = function (storeName, id, object) {
           'readwrite'
         ).openCursor().onsuccess = function (event) {
           var cursor = event.target.result;
+
           if (!cursor) {
             reject('Reservation not found in object store');
           }
+
           if (cursor.value.id === id) {
             cursor.update(object).onsuccess = resolve;
             return;
           }
+
           cursor.continue();
         };
       })

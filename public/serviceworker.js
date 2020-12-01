@@ -1,4 +1,4 @@
-importScripts('/js/reservations-store.js');
+importScripts(['/js/reservations-store.js']);
 
 var CACHE_NAME = 'gih-cache-v5';
 var CACHED_URLS = [
@@ -14,7 +14,6 @@ var CACHED_URLS = [
   '/js/app.js',
   '/js/offline-map.js',
   '/js/my-account.js',
-  '/js/reservations-store.js',
   // Images
   '/img/logo.png',
   '/img/logo-header.png',
@@ -30,7 +29,6 @@ var CACHED_URLS = [
   '/img/map-offline.jpg',
   // JSON
   '/events.json',
-  '/reservations.json',
 ];
 var googleMapsAPIJS =
   'https://maps.googleapis.com/maps/api/js?key=' +
@@ -179,3 +177,9 @@ const syncReservations = () => {
     )
   );
 };
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-reservations') {
+    event.waitUntil(syncReservations());
+  }
+});
